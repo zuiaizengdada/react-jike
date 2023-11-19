@@ -1,15 +1,16 @@
 import { LoginForm } from '@/pages/Login';
-import { request } from '@/utils';
+import { setToken as _setToken, getToken, request } from '@/utils';
 import { createSlice } from '@reduxjs/toolkit';
 
 const userStore = createSlice({
   name: 'user',
   initialState: {
-    token: ''
+    token: getToken() || ''
   },
   reducers: {
     setToken(state, action) {
       state.token = action.payload;
+      _setToken(action.payload);
     }
   }
 });

@@ -1,5 +1,6 @@
 // axios封装
 import axios, { AxiosInstance } from 'axios';
+import { getToken } from './token';
 
 /**
  * 1. 根域名配置
@@ -16,6 +17,11 @@ const request: AxiosInstance = axios.create({
 
 request.interceptors.request.use(
   (config) => {
+    const token = getToken();
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+
     return config;
   },
   (error) => {
