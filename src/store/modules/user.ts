@@ -1,5 +1,6 @@
+import { getProfileAPI, loginAPI } from '@/apis/user';
 import { LoginForm } from '@/pages/Login';
-import { setToken as _setToken, getToken, removeToken, request } from '@/utils';
+import { setToken as _setToken, getToken, removeToken } from '@/utils';
 import { createSlice } from '@reduxjs/toolkit';
 
 const userStore = createSlice({
@@ -31,7 +32,7 @@ export const userReducer = userStore.reducer;
 // 登录
 const fetchLogin = (loginForm: LoginForm) => {
   return async (dispatch: any) => {
-    const res = await request.post('/authorizations', loginForm);
+    const res = await loginAPI(loginForm);
 
     dispatch(setToken(res.data.token));
   };
@@ -40,12 +41,12 @@ const fetchLogin = (loginForm: LoginForm) => {
 // 获取个人用户信息
 const fetchUserInfo = () => {
   return async (dispatch: any) => {
-    const res = await request.get('/user/profile');
+    const res = await getProfileAPI();
 
     dispatch(setUserInfo(res.data));
   };
 };
 
-export { setToken, fetchLogin, fetchUserInfo, setUserInfo, clearUserInfo };
+export { clearUserInfo, fetchLogin, fetchUserInfo, setToken, setUserInfo };
 
 export default userReducer;
