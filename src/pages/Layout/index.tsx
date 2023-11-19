@@ -2,6 +2,9 @@ import { Layout, Menu, Popconfirm } from 'antd';
 import { HomeOutlined, DiffOutlined, EditOutlined, LogoutOutlined } from '@ant-design/icons';
 import './index.scss';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchUserInfo } from '@/store/modules/user';
 
 const { Header, Sider } = Layout;
 
@@ -30,12 +33,19 @@ const GeekLayout = () => {
   };
 
   const { pathname } = useLocation();
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch<any>(fetchUserInfo());
+  }, [dispatch]);
+
+  const name = useSelector((state: any) => state.user.userInfo.name);
   return (
     <Layout>
       <Header className="header">
         <div className="logo" />
         <div className="user-info">
-          <span className="user-name">柴柴老师</span>
+          <span className="user-name">{name}</span>
           <span className="user-logout">
             <Popconfirm title="是否确认退出？" okText="退出" cancelText="取消">
               <LogoutOutlined /> 退出
