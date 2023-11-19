@@ -1,6 +1,7 @@
 // axios封装
 import axios, { AxiosInstance } from 'axios';
-import { getToken } from './token';
+import { getToken, removeToken } from './token';
+import router from '@/router';
 
 /**
  * 1. 根域名配置
@@ -31,7 +32,14 @@ request.interceptors.request.use(
 
 request.interceptors.response.use(
   (response) => response.data,
-  (error) => Promise.reject(error)
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      removeToken();
+      router.navigate('/login');
+      window.location.reload();
+    }
+    return Promise.reject(error);
+  }
 );
 
 export { request };
