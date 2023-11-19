@@ -1,5 +1,5 @@
 import { LoginForm } from '@/pages/Login';
-import { setToken as _setToken, getToken, request } from '@/utils';
+import { setToken as _setToken, getToken, removeToken, request } from '@/utils';
 import { createSlice } from '@reduxjs/toolkit';
 
 const userStore = createSlice({
@@ -15,11 +15,16 @@ const userStore = createSlice({
     },
     setUserInfo(state, action) {
       state.userInfo = action.payload;
+    },
+    clearUserInfo(state) {
+      state.token = '';
+      state.userInfo = {};
+      removeToken();
     }
   }
 });
 
-const { setToken, setUserInfo } = userStore.actions;
+const { setToken, setUserInfo, clearUserInfo } = userStore.actions;
 
 export const userReducer = userStore.reducer;
 
@@ -41,6 +46,6 @@ const fetchUserInfo = () => {
   };
 };
 
-export { setToken, fetchLogin, fetchUserInfo, setUserInfo };
+export { setToken, fetchLogin, fetchUserInfo, setUserInfo, clearUserInfo };
 
 export default userReducer;
