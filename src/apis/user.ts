@@ -15,10 +15,3 @@ export function getProfileAPI() {
     method: 'GET'
   });
 }
-
-export function getChannelAPI() {
-  return request({
-    url: '/channels',
-    method: 'GET'
-  });
-}

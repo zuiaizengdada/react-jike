@@ -1,4 +1,4 @@
-import { getChannelAPI } from '@/apis/user';
+import { createArticleAPI, getChannelAPI } from '@/apis/article';
 import { Breadcrumb, Button, Card, Form, Input, Select, Space } from 'antd';
 import { useEffect, useState } from 'react';
 
@@ -12,18 +12,43 @@ interface Channel {
   name: string;
 }
 
+interface FormValue {
+  channel_id: number;
+  content: string;
+  title: string;
+  cover?: {
+    type?: number;
+    images?: any[];
+  };
+}
+
 const Publish = () => {
   const [channelList, setChannelList] = useState<Channel[]>([]);
 
   useEffect(() => {
     const getChannelList = async () => {
       const res = await getChannelAPI();
-      // console.log(res.data);
+
       setChannelList(res.data.channels);
     };
 
     getChannelList();
   }, []);
+
+  const onFinsh = (formValue: FormValue) => {
+    const { title, channel_id, content } = formValue;
+    const reqData = {
+      title,
+      content,
+      cover: {
+        type: 0,
+        images: []
+      },
+      channel_id
+    };
+
+    createArticleAPI(reqData);
+  };
   return (
     <div className="publish">
       <Card
@@ -38,7 +63,12 @@ const Publish = () => {
           />
         }
       >
-        <Form labelCol={{ span: 4 }} wrapperCol={{ span: 16 }} initialValues={{ type: 1 }}>
+        <Form
+          labelCol={{ span: 4 }}
+          wrapperCol={{ span: 16 }}
+          initialValues={{ type: 1 }}
+          onFinish={onFinsh}
+        >
           <Form.Item
             label="标题"
             name="title"
