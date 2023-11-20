@@ -1,11 +1,29 @@
+import { getChannelAPI } from '@/apis/user';
 import { Breadcrumb, Button, Card, Form, Input, Select, Space } from 'antd';
+import { useEffect, useState } from 'react';
 
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
 import { Link } from 'react-router-dom';
 
+interface Channel {
+  id: number;
+  name: string;
+}
+
 const Publish = () => {
+  const [channelList, setChannelList] = useState<Channel[]>([]);
+
+  useEffect(() => {
+    const getChannelList = async () => {
+      const res = await getChannelAPI();
+      // console.log(res.data);
+      setChannelList(res.data.channels);
+    };
+
+    getChannelList();
+  }, []);
   return (
     <div className="publish">
       <Card
@@ -45,7 +63,11 @@ const Publish = () => {
             rules={[{ required: true, message: '请选择文章频道' }]}
           >
             <Select placeholder="请选择文章频道" style={{ width: 400 }}>
-              <Select.Option value={0}>推荐</Select.Option>
+              {channelList.map((item) => (
+                <Select.Option value={item.id} key={item.id}>
+                  {item.name}
+                </Select.Option>
+              ))}
             </Select>
           </Form.Item>
 
@@ -54,7 +76,6 @@ const Publish = () => {
             name="content"
             rules={[{ required: true, message: '请输入文章内容' }]}
           >
-            {' '}
             <ReactQuill className="publish-quill" theme="snow" placeholder="请输入文章内容" />
           </Form.Item>
 
