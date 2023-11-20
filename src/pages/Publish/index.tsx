@@ -1,5 +1,6 @@
 import { createArticleAPI, getChannelAPI } from '@/apis/article';
-import { Breadcrumb, Button, Card, Form, Input, Select, Space } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import { Breadcrumb, Button, Card, Form, Input, Radio, Select, Space, Upload } from 'antd';
 import { useEffect, useState } from 'react';
 
 import ReactQuill from 'react-quill';
@@ -48,6 +49,11 @@ const Publish = () => {
     };
 
     createArticleAPI(reqData);
+  };
+
+  const [imageList, setImageList] = useState([]);
+  const onChange = (value: any) => {
+    setImageList(value.fileList);
   };
   return (
     <div className="publish">
@@ -99,6 +105,27 @@ const Publish = () => {
                 </Select.Option>
               ))}
             </Select>
+          </Form.Item>
+
+          <Form.Item label="封面">
+            <Form.Item name="type">
+              <Radio.Group>
+                <Radio value={1}>单图</Radio>
+                <Radio value={3}>三图</Radio>
+                <Radio value={0}>无图</Radio>
+              </Radio.Group>
+            </Form.Item>
+            <Upload
+              listType="picture-card"
+              showUploadList
+              action={'http://geek.itheima.net/v1_0/upload'}
+              name="image"
+              onChange={onChange}
+            >
+              <div style={{ marginTop: 8 }}>
+                <PlusOutlined />
+              </div>
+            </Upload>
           </Form.Item>
 
           <Form.Item
