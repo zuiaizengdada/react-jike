@@ -21,7 +21,7 @@ import 'react-quill/dist/quill.snow.css';
 
 import { Link } from 'react-router-dom';
 
-interface FormValue {
+export interface FormValue {
   channel_id: number;
   content: string;
   title: string;

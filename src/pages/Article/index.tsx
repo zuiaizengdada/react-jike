@@ -6,6 +6,8 @@ import locale from 'antd/es/date-picker/locale/zh_CN';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import { useChannel } from '@/hooks/useChannel';
+import { useEffect, useState } from 'react';
+import { getArticleListAPI } from '@/apis/article';
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -73,22 +75,21 @@ const Article = () => {
       }
     }
   ];
-  // 准备表格body数据
-  const data: DataType[] = [
-    {
-      id: '8218',
-      comment_count: 0,
-      cover: {
-        images: []
-      },
-      like_count: 0,
-      pubdate: '2019-03-11 09:00:00',
-      read_count: 2,
-      status: 2,
-      title: 'wkwebview离线化加载h5资源解决方案'
-    }
-  ];
 
+  const [list, setList] = useState([]);
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    async function getList() {
+      const res = await getArticleListAPI({
+        page: 1,
+        per_page: 10
+      });
+      setList(res.data.results);
+      setCount(res.data.total_count);
+    }
+
+    getList();
+  }, []);
   return (
     <div>
       <Card
@@ -129,8 +130,8 @@ const Article = () => {
         </Form>
       </Card>
 
-      <Card title={`根据筛选条件共查询到 count 条结果：`}>
-        <Table rowKey="id" columns={columns} dataSource={data} />
+      <Card title={`根据筛选条件共查询到 ${count} 条结果：`}>
+        <Table rowKey="id" columns={columns} dataSource={list} />
       </Card>
     </div>
   );
