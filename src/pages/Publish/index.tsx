@@ -1,4 +1,5 @@
-import { createArticleAPI, getChannelAPI } from '@/apis/article';
+import { createArticleAPI } from '@/apis/article';
+import { useChannel } from '@/hooks/useChannel';
 import { PlusOutlined } from '@ant-design/icons';
 import {
   Breadcrumb,
@@ -13,17 +14,12 @@ import {
   message,
   type UploadFile
 } from 'antd';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
 import { Link } from 'react-router-dom';
-
-interface Channel {
-  id: number;
-  name: string;
-}
 
 interface FormValue {
   channel_id: number;
@@ -36,17 +32,7 @@ interface FormValue {
 }
 
 const Publish = () => {
-  const [channelList, setChannelList] = useState<Channel[]>([]);
-
-  useEffect(() => {
-    const getChannelList = async () => {
-      const res = await getChannelAPI();
-
-      setChannelList(res.data.channels);
-    };
-
-    getChannelList();
-  }, []);
+  const { channelList } = useChannel();
 
   const onFinsh = (formValue: FormValue) => {
     const { title, channel_id, content } = formValue;

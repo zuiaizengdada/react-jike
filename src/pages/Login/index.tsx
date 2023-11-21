@@ -1,4 +1,4 @@
-import logo from '@/asstes/logo.png';
+import logo from '@/assets/logo.png';
 import { fetchLogin } from '@/store/modules/user';
 import { Button, Card, Form, Input, message } from 'antd';
 import { useDispatch } from 'react-redux';
