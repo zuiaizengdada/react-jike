@@ -1,6 +1,18 @@
 import { createArticleAPI, getChannelAPI } from '@/apis/article';
 import { PlusOutlined } from '@ant-design/icons';
-import { Breadcrumb, Button, Card, Form, Input, Radio, Select, Space, Upload } from 'antd';
+import {
+  Breadcrumb,
+  Button,
+  Card,
+  Form,
+  Input,
+  Radio,
+  Select,
+  Space,
+  Upload,
+  message,
+  type UploadFile
+} from 'antd';
 import { useEffect, useState } from 'react';
 
 import ReactQuill from 'react-quill';
@@ -38,12 +50,13 @@ const Publish = () => {
 
   const onFinsh = (formValue: FormValue) => {
     const { title, channel_id, content } = formValue;
+    if (imageList.length !== imageType) return message.warning('封面类型跟图片数量不匹配');
     const reqData = {
       title,
       content,
       cover: {
-        type: 0,
-        images: []
+        type: imageType,
+        images: imageList.map((item: UploadFile) => item.response.data.url)
       },
       channel_id
     };
@@ -51,14 +64,13 @@ const Publish = () => {
     createArticleAPI(reqData);
   };
 
-  const [imageList, setImageList] = useState([]);
+  const [imageList, setImageList] = useState<UploadFile[]>([]);
   const onChange = (value: any) => {
     setImageList(value.fileList);
   };
 
   const [imageType, setImageType] = useState(0);
   const onTypeChange = ({ target: { value } }: any) => {
-    console.log(value);
     setImageType(value);
   };
   return (
