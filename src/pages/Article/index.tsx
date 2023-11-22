@@ -1,4 +1,16 @@
-import { Breadcrumb, Button, Card, DatePicker, Form, Radio, Select, Space, Table, Tag } from 'antd';
+import {
+  Breadcrumb,
+  Button,
+  Card,
+  DatePicker,
+  Form,
+  Radio,
+  Select,
+  Space,
+  Table,
+  Tag,
+  type TagType
+} from 'antd';
 import { Link } from 'react-router-dom';
 import img404 from '@/assets/error.png';
 
@@ -25,8 +37,18 @@ interface DataType {
   title: string;
 }
 
+enum Tags {
+  WARNING = 1,
+  SUCCESS = 2
+}
+const statusMap = new Map([
+  [Tags.WARNING, <Tag color="warning">审核中</Tag>],
+  [Tags.SUCCESS, <Tag color="success">审核通过</Tag>]
+]);
+
 const Article = () => {
   const { channelList } = useChannel();
+
   // 准备列数据
   const columns: ColumnsType<DataType> = [
     {
@@ -45,7 +67,7 @@ const Article = () => {
     {
       title: '状态',
       dataIndex: 'status',
-      render: (data) => <Tag color="green">审核通过</Tag>
+      render: (data) => statusMap.get(data)
     },
     {
       title: '发布时间',
